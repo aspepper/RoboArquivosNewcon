@@ -6,7 +6,7 @@ As configurações devem ser ajustadas no arquivo appsettings.json
 	DirectoryProcessed = Pasta que o serviço cria os arquivos processados separados, por REG e AVULSO.
 	DirectoryArchive = Pasta de backup, onde os arquivos serão movidos após serem executados.
 	DirectoryLog = Pasta dos arquivos de Log
-	FileExtension = Extensão dos arquivos que devem ser processados (ex: YC). Podem ser vários separados por (;) (exe: YC;txt;log)
+	FileExtension = Extensão dos arquivos que devem ser processados (ex: YC).
 	ForceCreateAllFiles = Indica se o serviço irá gerar os dois arquivos, mesmo que não haja nenhum avulso de algum dos indicadores true/false. 
 						  Caso false, o serviço só irá gerar os arquivos cujo exista retorno bancário.
 
