@@ -71,55 +71,63 @@ namespace RoboArquivosNewcon
                     double valor;
 
                     flog.WriteLine("{0} - Iniciando o processamento do arquivo {1}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), Path.GetFileName(_fileCNAB400));
-                    using StreamReader freader = new StreamReader(fileSource);
-                    using StreamWriter fwriter2371 = new StreamWriter(fileAvulso2371);
-                    using StreamWriter fwriter237 = new StreamWriter(fileAvulso237);
 
-                    while ((line = freader.ReadLine()) != null)
-                    {
+                    using (StreamReader freader = new StreamReader(fileSource)) {
 
-                        currLine++;
+                        using (StreamWriter fwriter2371 = new StreamWriter(fileAvulso2371)) {
 
-                        if (line[0] == '1')
-                        {
-                            if (!long.TryParse(line.Substring(70, 11), out long identificador)) { identificador = 0; }
-
-                            // 2371
-                            if ((identificador.CompareTo(intervalAgent2371Initial) >= 0) && (identificador.CompareTo(intervalAgent2371Final) <= 0))
+                            using (StreamWriter fwriter237 = new StreamWriter(fileAvulso237))
                             {
-                                fwriter2371.WriteLine(line);
-                                // Vetifica se tem data de pagto
-                                if (!string.IsNullOrWhiteSpace(line.Substring(295, 9)))
+
+
+
+                                while ((line = freader.ReadLine()) != null)
                                 {
-                                    if (!double.TryParse(line.Substring(152, 13), out valor)) { valor = 0; }
-                                    totalAvulso2371 += (valor / 100);
+
+                                    currLine++;
+
+                                    if (line[0] == '1')
+                                    {
+                                        if (!long.TryParse(line.Substring(70, 11), out long identificador)) { identificador = 0; }
+
+                                        // 2371
+                                        if ((identificador.CompareTo(intervalAgent2371Initial) >= 0) && (identificador.CompareTo(intervalAgent2371Final) <= 0))
+                                        {
+                                            fwriter2371.WriteLine(line);
+                                            // Vetifica se tem data de pagto
+                                            if (!string.IsNullOrWhiteSpace(line.Substring(295, 9)))
+                                            {
+                                                if (!double.TryParse(line.Substring(152, 13), out valor)) { valor = 0; }
+                                                totalAvulso2371 += (valor / 100);
+                                            }
+                                        }
+                                        // 237
+                                        else
+                                        if ((identificador.CompareTo(intervalAgent237Initial) >= 0) && (identificador.CompareTo(intervalAgent237Final) <= 0))
+                                        {
+                                            fwriter237.WriteLine(line);
+                                            // Vetifica se tem data de pagto
+                                            if (!string.IsNullOrWhiteSpace(line.Substring(295, 9)))
+                                            {
+                                                if (!double.TryParse(line.Substring(152, 13), out valor)) { valor = 0; }
+                                                totalAvulso237 += (valor / 100);
+                                            }
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        fwriter2371.WriteLine(line);
+                                        fwriter237.WriteLine(line);
+                                    }
                                 }
                             }
-                            // 237
-                            else
-                            if ((identificador.CompareTo(intervalAgent237Initial) >= 0) && (identificador.CompareTo(intervalAgent237Final) <= 0))
-                            {
-                                fwriter237.WriteLine(line);
-                                // Vetifica se tem data de pagto
-                                if (!string.IsNullOrWhiteSpace(line.Substring(295, 9)))
-                                {
-                                    if (!double.TryParse(line.Substring(152, 13), out valor)) { valor = 0; }
-                                    totalAvulso237 += (valor / 100);
-                                }
-                            }
 
-                        }
-                        else
-                        {
-                            fwriter2371.WriteLine(line);
-                            fwriter237.WriteLine(line);
+                            flog.WriteLine("{0} - Processamento Finalizado com Sucesso", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+                            flog.WriteLine("{0} - Total Avulso 2371 = {1}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), totalAvulso2371.ToString("#,###,##0.00", CultureInfo.CreateSpecificCulture("pt-BR")));
+                            flog.WriteLine("{0} - Total Avulso 237  = {1}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), totalAvulso237.ToString("#,###,##0.00", CultureInfo.CreateSpecificCulture("pt-BR")));
                         }
                     }
-
-                    flog.WriteLine("{0} - Processamento Finalizado com Sucesso", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
-                    flog.WriteLine("{0} - Total Avulso 2371 = {1}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), totalAvulso2371.ToString("#,###,##0.00", CultureInfo.CreateSpecificCulture("pt-BR")));
-                    flog.WriteLine("{0} - Total Avulso 237  = {1}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), totalAvulso237.ToString("#,###,##0.00", CultureInfo.CreateSpecificCulture("pt-BR")));
-
                 }
                 catch (Exception ex)
                 {

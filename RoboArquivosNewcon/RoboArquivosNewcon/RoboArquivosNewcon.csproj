@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>dotnet-RoboArquivosNewcon-897BF092-A9C5-4B96-8741-83B5995E4EFF</UserSecretsId>
   </PropertyGroup>
 

@@ -21,27 +21,27 @@ namespace RoboArquivosNewcon
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = _configuration.GetSection("DirectoryReceive").Value;
-
-            watcher.NotifyFilter = NotifyFilters.LastAccess
-                                 | NotifyFilters.LastWrite
-                                 | NotifyFilters.FileName
-                                 | NotifyFilters.DirectoryName;
-
-            string[] extensions = _configuration.GetSection("FileExtension").Value.Split(';');
-            if (extensions.Length == 1) { watcher.Filter = "*." + extensions[0]; }
-            else foreach (string ext in extensions) { watcher.Filters.Add("*." + ext); }
-
-            watcher.Created += OnChanged;
-
-            watcher.EnableRaisingEvents = true;
-
-            while (!stoppingToken.IsCancellationRequested)
+            using (FileSystemWatcher watcher = new FileSystemWatcher())
             {
-                await Task.Delay(60000, stoppingToken);
-            }
 
+                watcher.Path = _configuration.GetSection("DirectoryReceive").Value;
+
+                watcher.NotifyFilter = NotifyFilters.LastAccess
+                                     | NotifyFilters.LastWrite
+                                     | NotifyFilters.FileName
+                                     | NotifyFilters.DirectoryName;
+
+                watcher.Filter = "*." + _configuration.GetSection("FileExtension").Value;
+
+                watcher.Created += OnChanged;
+
+                watcher.EnableRaisingEvents = true;
+
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    await Task.Delay(60000, stoppingToken);
+                }
+            }
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
