@@ -135,6 +135,9 @@ namespace RoboArquivosNewcon
                     flog.WriteLine("      Line error : {0}", line);
                     flog.WriteLine("      Error message: {0}", ex.Message);
                     flog.WriteLine(ex.StackTrace);
+
+                    LogError.LogErrorMessage(ex);
+
                     return false;
                 }
 
@@ -150,5 +153,7 @@ namespace RoboArquivosNewcon
             File.Delete(_fileCNAB400);
             return true;
         }
+
+
     }
 }

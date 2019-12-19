@@ -21,26 +21,34 @@ namespace RoboArquivosNewcon
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using (FileSystemWatcher watcher = new FileSystemWatcher())
+            try
             {
-
-                watcher.Path = _configuration.GetSection("DirectoryReceive").Value;
-
-                watcher.NotifyFilter = NotifyFilters.LastAccess
-                                     | NotifyFilters.LastWrite
-                                     | NotifyFilters.FileName
-                                     | NotifyFilters.DirectoryName;
-
-                watcher.Filter = "*." + _configuration.GetSection("FileExtension").Value;
-
-                watcher.Created += OnChanged;
-
-                watcher.EnableRaisingEvents = true;
-
-                while (!stoppingToken.IsCancellationRequested)
+                using (FileSystemWatcher watcher = new FileSystemWatcher())
                 {
-                    await Task.Delay(60000, stoppingToken);
+                    LogError.LogErrorMessage("Serviço iniciado.");
+
+                    watcher.Path = _configuration.GetSection("DirectoryReceive").Value;
+                    LogError.LogErrorMessage(string.Format("Escutando a pasta {0}", _configuration.GetSection("DirectoryReceive").Value));
+
+                    watcher.NotifyFilter = NotifyFilters.LastWrite;
+
+                    watcher.Filter = "*." + _configuration.GetSection("FileExtension").Value;
+                    LogError.LogErrorMessage(string.Format("Verificando arquivos *.{0}", _configuration.GetSection("FileExtension").Value));
+
+                    watcher.Created += OnChanged;
+
+                    watcher.EnableRaisingEvents = true;
+
+                    while (!stoppingToken.IsCancellationRequested)
+                    {
+                        await Task.Delay(60000, stoppingToken);
+                    }
+                    LogError.LogErrorMessage("Serviço cancelado.");
                 }
+            }
+            catch(Exception ex)
+            {
+                LogError.LogErrorMessage(ex);
             }
         }
 
