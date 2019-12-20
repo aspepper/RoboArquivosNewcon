@@ -10,15 +10,8 @@ namespace RoboArquivosNewcon
 
         public static void LogErrorMessage(string message)
         {
-            var exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
-            Regex appPathMatcher = new Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
-            var folderLog = appPathMatcher.Match(exePath).Value;
-            if (string.IsNullOrEmpty(folderLog))
-            {
-                folderLog = Directory.GetCurrentDirectory();
-            }
-
-            string fileLogName = Path.Combine(folderLog, string.Format("{0}.log", DateTime.Now.ToString("yyyyMMdd")));
+            string fileLogName = Path.Combine(Directory.GetCurrentDirectory(),
+                                            string.Format("{0}.log", DateTime.Now.ToString("yyyyMMdd")));
 
             FileStream fileLog;
             if (!File.Exists(fileLogName))
