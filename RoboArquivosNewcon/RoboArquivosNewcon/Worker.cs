@@ -30,7 +30,7 @@ namespace RoboArquivosNewcon
                     watcher.Path = _configuration.GetSection("DirectoryReceive").Value;
                     LogError.LogErrorMessage(string.Format("Escutando a pasta {0}", _configuration.GetSection("DirectoryReceive").Value));
 
-                    watcher.NotifyFilter = NotifyFilters.LastWrite;
+                    watcher.NotifyFilter = NotifyFilters.FileName;
 
                     watcher.Filter = "*." + _configuration.GetSection("FileExtension").Value;
                     LogError.LogErrorMessage(string.Format("Verificando arquivos *.{0}", _configuration.GetSection("FileExtension").Value));
