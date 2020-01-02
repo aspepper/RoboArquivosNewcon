@@ -43,6 +43,8 @@ namespace RoboArquivosNewcon
                     {
                         await Task.Delay(60000, stoppingToken);
                     }
+
+                    watcher.EnableRaisingEvents = false;
                     LogError.LogErrorMessage("Serviço cancelado.");
                 }
             }
@@ -54,6 +56,7 @@ namespace RoboArquivosNewcon
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
+
             if (e.ChangeType == WatcherChangeTypes.Created)
             {
                 Console.WriteLine("File: {0} {1}!", e.FullPath, e.ChangeType);
@@ -61,8 +64,11 @@ namespace RoboArquivosNewcon
                 Task.Delay(5000).Wait();
 
                 var processa = new ProcessaCNAB(e.FullPath, _configuration);
+
                 processa.ProcessCNAB400();
             }
+
+
         }
 
     }

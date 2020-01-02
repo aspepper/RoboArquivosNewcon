@@ -46,6 +46,9 @@ namespace RoboArquivosNewcon
             long intervalAgent237Initial = long.Parse(_configuration.GetSection("IntervalAgent237Initial").Value);
             long intervalAgent237Final = long.Parse(_configuration.GetSection("IntervalAgent237Final").Value);
 
+            int countLines237 = 0;
+            int countLines2371 = 0;
+
             using (StreamWriter flog = new StreamWriter(fileLog))
             {
                 int currLine = 0;
@@ -72,15 +75,12 @@ namespace RoboArquivosNewcon
 
                     flog.WriteLine("{0} - Iniciando o processamento do arquivo {1}", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), Path.GetFileName(_fileCNAB400));
 
-                    using (StreamReader freader = new StreamReader(fileSource)) {
-
-                        using (StreamWriter fwriter2371 = new StreamWriter(fileAvulso2371)) {
-
+                    using (StreamReader freader = new StreamReader(fileSource))
+                    {
+                        using (StreamWriter fwriter2371 = new StreamWriter(fileAvulso2371))
+                        {
                             using (StreamWriter fwriter237 = new StreamWriter(fileAvulso237))
                             {
-
-
-
                                 while ((line = freader.ReadLine()) != null)
                                 {
 
@@ -93,8 +93,9 @@ namespace RoboArquivosNewcon
                                         // 2371
                                         if ((identificador.CompareTo(intervalAgent2371Initial) >= 0) && (identificador.CompareTo(intervalAgent2371Final) <= 0))
                                         {
-                                            fwriter2371.WriteLine(line);
-                                            // Vetifica se tem data de pagto
+                                            countLines2371++;
+                                            fwriter2371.WriteLine(string.Concat(line.Substring(0, line.Length - 6), countLines2371.ToString("000000")));
+                                            // Verifica se tem data de pagto
                                             if (!string.IsNullOrWhiteSpace(line.Substring(295, 9)))
                                             {
                                                 if (!double.TryParse(line.Substring(152, 13), out valor)) { valor = 0; }
@@ -105,8 +106,9 @@ namespace RoboArquivosNewcon
                                         else
                                         if ((identificador.CompareTo(intervalAgent237Initial) >= 0) && (identificador.CompareTo(intervalAgent237Final) <= 0))
                                         {
-                                            fwriter237.WriteLine(line);
-                                            // Vetifica se tem data de pagto
+                                            countLines237++;
+                                            fwriter237.WriteLine(string.Concat(line.Substring(0, line.Length - 6), countLines237.ToString("000000")));
+                                            // Verifica se tem data de pagto
                                             if (!string.IsNullOrWhiteSpace(line.Substring(295, 9)))
                                             {
                                                 if (!double.TryParse(line.Substring(152, 13), out valor)) { valor = 0; }
@@ -117,8 +119,11 @@ namespace RoboArquivosNewcon
                                     }
                                     else
                                     {
-                                        fwriter2371.WriteLine(line);
-                                        fwriter237.WriteLine(line);
+                                        countLines2371++;
+                                        fwriter2371.WriteLine(string.Concat(line.Substring(0,line.Length-6), countLines2371.ToString("000000")));
+
+                                        countLines237++;
+                                        fwriter237.WriteLine(string.Concat(line.Substring(0, line.Length - 6), countLines237.ToString("000000")));
                                     }
                                 }
                             }
